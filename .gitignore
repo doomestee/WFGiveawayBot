@@ -1,0 +1,6 @@
+/log/main
+/log/error
+/.vscode
+/node_modules
+.env
+/usage_log
