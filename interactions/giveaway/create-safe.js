@@ -106,7 +106,7 @@ module.exports = {
         client.createMessage(interaction.channel.id, {
             content: `${id.emoji.pop} **GIVEAWAY!** ${id.emoji.pop}`,
             embed: embed.giveaway.start({
-                prize, duration: parsed_duration/1000, startDate: Math.floor(Date.now()/1000), restrictions: parsed_restrictions, contact: {id: contact}, starter_id: interaction.member.user.id, winners: winners || 1
+                prize, duration: parsed_duration, startDate: Date.now(), restrictions: parsed_restrictions, contact: {id: contact}, starter_id: interaction.member.user.id, winners: winners || 1
             })
         }).then((msg) => {
             // Poggers, creating the message was successful so we now push it to the database then we can start processing it as if it was.
@@ -145,6 +145,8 @@ module.exports = {
 
             });
         }, (error) => {
+            logger.error(error);
+
             return interaction.edit(client.requestHandler, {
                 content: "ACK! There has been an error trying to simply create a message for some reason, perhaps I forgot to add a check to see if I can send the messages?\nBasically, I am probably lacking access to send a message so please? *nuzzles*"
             })

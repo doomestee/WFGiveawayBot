@@ -205,7 +205,7 @@ module.exports = {
                 //content: `${id.emoji} **GIVEAWAY HAS STARTED!** ${id.emoji}`,
                 //embed: {
                     title: giveaway.prize,
-                    description: `End date: <t:${giveaway.duration+giveaway.startDate}:f>\nEnding in <t:${giveaway.duration+giveaway.startDate}:R>`,//${formatDuration(giveaway.startDate, giveaway.duration)}`,
+                    description: `End date: <t:${Math.floor(giveaway.duration/1000)+Math.floor(giveaway.startDate/1000)}:f>\nEnding in <t:${Math.floor(giveaway.duration/1000)+Math.floor(giveaway.startDate/1000)}:R>`,//${formatDuration(giveaway.startDate, giveaway.duration)}`,
                     fields: [{
                         name: `Restrictions:`,
                         value: /*(giveaway.restrictions.length) ?*/ formatRestrictions(giveaway.restrictions) /* : "__***None!***__"*/,

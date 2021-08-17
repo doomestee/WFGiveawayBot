@@ -64,6 +64,10 @@ module.exports = (stuff) => {
 
         - Disqualify end
 
+        - Bind add
+
+        - Bind remove
+
         */
 
         client.requestHandler.request('POST', `/applications/${client.user.id}/guilds/${id.guild.main}/commands`, true, {
@@ -84,7 +88,7 @@ module.exports = (stuff) => {
                         type: 3 
                     }, {
                         name: 'reason',
-                        description: "Reasoning for the disqualification?",
+                        description: "Reason for the disqualification?",
                         type: 3
                     }]
                 },
@@ -102,6 +106,43 @@ module.exports = (stuff) => {
             ], type: 1 // Slash command
         });
 
+        
+        client.requestHandler.request('POST', `/applications/${client.user.id}/guilds/${id.guild.main}/commands`, true, {
+            name: "bind",
+            description: "Stuff...",
+            options: [{
+                    name: 'add',
+                    description: 'Binds a user to another user!',
+                    type: 1, // Sub-commies
+                    options: [{
+                        name: 'user',
+                        description: "The primary user to bind (TO).",
+                        type: 6,
+                        required: true
+                    }, {
+                        name: 'binding_user',
+                        description: "The secondary user to bind (FROM), note that an ID can be passed instead of @",
+                        type: 6,
+                        required: true
+                    }, {
+                        name: 'reason',
+                        description: "Reason for the binding?",
+                        type: 3
+                    }]
+                },
+                {
+                    name: 'remove',
+                    description: 'Unbinds a user.',
+                    options: [{
+                        name: 'user',
+                        description: "The primary user to unbind.",
+                        type: 6,
+                        required: true
+                    }],
+                    type: 1 // Sub-commies
+                }
+            ], type: 1 // Slash command
+        });
 
         /*
 

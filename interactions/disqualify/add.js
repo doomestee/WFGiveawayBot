@@ -62,7 +62,7 @@ module.exports = {
             if (id.log.disqualify[interaction.guild.id]) {
                 client.createMessage(id.log.disqualify[interaction.guild.id], {
                     content: `<@${user}> has been disqualified by ${((interaction.member.nick) ? interaction.member.nick : interaction.member.user.username) + '#' + interaction.member.user.discriminator} ${infr.action.duration != null ? `for ${ms(infr.action.duration)}` : 'for a very very long time as the duration was not passed.'}\n${(reason) ? "Reason: `" + reason + "`" : 'No reason was provided.'}`
-                }).catch(logger.error);
+                }).catch((err) => logger.error(err));
             }
 
             //interaction.sendInitial(client.requestHandler, {content: "You provided invalid duration, please use a valid duration input." + "\n\n```" + interaction.spitOptions() + "```"}, {ephemeral: true}).catch(logger.error);//+ "\n\n```/giveaway create safe " + interaction.fetchOption('safe', true).options.map(a => `${a.name}:${a.value}`).join(' ') +"```"}, {ephemeral: true}).catch(logger.error);  
