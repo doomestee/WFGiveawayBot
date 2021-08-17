@@ -84,14 +84,16 @@ module.exports = {
                             t: 'ROLE',
                             v: roles[y]
                         };
-                        continue;
+                        //continue;
+                    } else {
+                        parsed_restrictions.push({
+                            t: 'ROLE',
+                            v: roles[y]
+                        });
                     }
-
-                    parsed_restrictions.push({
-                        t: 'ROLE',
-                        v: roles[y]
-                    });
                 }
+
+                if (parsed_restrictions[i]['t'] === 'ROLE') continue;
             }
 
             parsed_restrictions[i] = {

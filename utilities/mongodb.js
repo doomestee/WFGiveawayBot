@@ -112,8 +112,8 @@ module.exports = {
 
                             if (!member) member = fail_list.push(user_id[j]);
 
-                            result[type][user_id[j]] = member.roles.some(role => role === restrictions[i]['v']);
-                            if (!oneGotcha && result[type][user_id[j]]) oneGotcha = true;
+                            result[type][j] = member.roles.some(role => role === restrictions[i]['v']);
+                            if (!oneGotcha && result[type][j]) oneGotcha = true;
                         }
 
                         if (!oneGotcha) return user_id.map(() => 0);
