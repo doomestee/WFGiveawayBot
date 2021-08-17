@@ -29,6 +29,59 @@ function arrayAnd(arr) {
     return retArr;
 }
 
+module.exports = {
+    verifyRestrictionByUser: 
+    /**
+     * @param {{user: import("../manager/user"), client: import("eris").Client}} essential 
+     * @param {string|string[]} user_id 
+     * @param {{t: 'RANK'|'ROLE'|'MESSAGE'|'PLATINUM', v: any}[]} restrictions 
+     */
+    async (essential, user_id, restrictions) => {
+        if (!Array.isArray(user_id)) user_id = [user_id];
+        if (restrictions && restrictions.length) {
+            let result = {};
+
+            for (let i = 0; i < restrictions.length; i++) {
+                result[restrictions[i]['t']] = user_id.map(() => 0);
+                switch (restrictions[i]['t']) {
+                    case "PLATINUM": case "RANK":
+                        /* 
+                        
+                        If the restriction involves platinum, it will check and return an array of 0 and 1, each index will be the same
+                        and 0 would obviously mean that the user does not qualify whereas 1 is.
+
+                        */
+
+                        // Holy fudge, this is a big massive F for performance.
+                        let users = user_id.map(id => {
+                            let loser = user.fetch({_id: id});
+
+                            return (loser && loser.length) ? loser[0] : null;
+                        });
+
+                        //let users = user.fetch().filter(loser => user_id.includes(loser._id) || user.listOfDisabled.includes(loser._id));
+
+                        //let users = await mongo.db().collection('User').find({
+                        //    "$or": user_id.map(a => { return {_id: a}; }) // lmao rip server.
+                        //}).project({_id: 1, plat: 1}).toArray();
+
+                        if (users.length) {
+                            for (let a = 0; a < users.length; a++) {
+                                if (users[a]['plat'] >= restrictions[i]['v']) // if their plat is greater than, or equal to the required plat.
+                                    result[restrictions[i]['t']][user_id.findIndex(user => user == users[a]['_id'])] = 1;
+                            }
+
+                        } else {
+                            return user_id.map(() => 0); // If none of the document has showed up, nobody qualifies and so therefore nobody can win it.
+                        }
+                        break;
+                }
+            }
+
+        }
+
+    }
+}
 
 module.exports = {
     verifyRestrictionByUser:
@@ -36,9 +89,10 @@ module.exports = {
      * @param {import("../manager/user")} user 
      * @param {string|string[]} user_id
      * @param {{t: 'RANK'|'ROLE'|'MESSAGE'|'PLATINUM', v: any}[]} restrictions 
+     * @param {{client: import("eris").Client}} essentials
      * @returns {Promise<number[]>} a list of 0 and 1, basically booleans but cheap.
      */
-    async (user, user_id, restrictions) => {
+    async (user, user_id, restrictions, essentials) => {
         if (Array.isArray(user_id)) {
             if (restrictions && restrictions.length) {
                 let result = {}; //restrictions.length; //user_id.map(a => 0); // ik ik, idek why do i have this, most of the code on this function is easily optimised but... spaghetti.
@@ -97,6 +151,15 @@ module.exports = {
                             } else {
                                 return user_id.map(a => 0); // If none of the document has showed up, nobody qualifies and so therefore nobody can win the prize.
                             }
+                            break;
+                        case "ROLE":
+                            if (!essentials || !essentials.client) //{
+                                return Promise.reject(new Error("The essentials object was not passed in, with client object."));//Error("")
+                            //}
+
+                            let roles = (essentials.client.guilds)
+
+
                         default:
                             result[restrictions[i]['t']] = user_id.map(() => 1);
                     }
