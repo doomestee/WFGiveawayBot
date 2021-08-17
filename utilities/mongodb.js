@@ -49,8 +49,9 @@ module.exports = {
             for (let i = 0; i < restrictions.length; i++) {
                 const type = restrictions[i]['t'];
 
-                if (type !== 'UNKNOWN')
-                    result[type] = user_id.map(() => 0);
+                //result[restrictions[i]['t']] = user_id.map(() => 0);
+                //if (type !== 'UNKNOWN')
+                result[type] = user_id.map(() => 0);
                 switch (type) {
                     case "PLATINUM": case "RANK":
                         if (!essential && !essential.user) return Promise.reject(new Error("The user was not provided as an object for the first argument"));
@@ -117,8 +118,8 @@ module.exports = {
 
                         if (!oneGotcha) return user_id.map(() => 0);
                         break;
-                    //default:
-                        //result[restrictions[i]['t']] = user_id.map(() => 1);
+                    default:
+                        result[type] = user_id.map(() => 1);
                 }
             }
 

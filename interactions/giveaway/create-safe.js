@@ -70,7 +70,7 @@ module.exports = {
             if (val) {
                 val = val.map(id => id.replace(regex.number_only, ''));
 
-                let guild = client.guilds.find(interaction.guild.id);
+                let guild = client.guilds.get(interaction.guild.id);
                 /**
                  * If this role/s does exist in the guild.
                 */
