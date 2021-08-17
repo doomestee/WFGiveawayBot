@@ -18,6 +18,7 @@ module.exports = class Giveaway {
      * @param {number} [data.duration] How long will this giveaway last for (this will has to be added to `this.startDate`)
      * @param {number} [data.startDate] When the giveaway is set to start.
      * @param {number} [data.status] Status of the giveaway
+     * @param {Object} [data.guild_id] The ID of the guild for the giveaway
      * @param {Object} [data.message] The message for the giveaway if created, (if the message doesnt exist before it ended then it should be cancelled)
      * @param {string} [data.message.id] The ID of the message for the giveaway if created, (if the message doesnt exist before it ended then it should be cancelled)
      * @param {string} [data.message.channel_id] The channel for the message if created, (if the message doesnt exist before it ended then it should be cancelled)
@@ -63,6 +64,10 @@ module.exports = class Giveaway {
          * -1 for giveaways that has been cancelled. 
          */
         this.status = data.status || 0;
+        /**
+         * The ID of the guild for the giveaway
+         */
+        this.guild_id = data.guild_id || null;
         if (data.message) {
             /**
              * The message for the giveaway if created, (if the message doesnt exist before it ended then it should be cancelled)

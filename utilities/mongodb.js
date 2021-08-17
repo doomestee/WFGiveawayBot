@@ -12,6 +12,11 @@ TODO: add support for more restrictions
 const { platFromRank } = require(".");
 //const { user } = require("..");
 
+/**
+ * Shout out to Seb135 for the function :)
+ * @param {(0|1)[][]} arr 
+ * @returns {(0|1)[]}
+ */
 function arrayAnd(arr) {
     let maxLength = 0;
     arr.forEach(a => {
@@ -32,7 +37,7 @@ function arrayAnd(arr) {
 module.exports = {
     verifyRestrictionByUser: 
     /**
-     * @param {{user: import("../manager/user"), client: import("eris").Client}} essential 
+     * @param {{user: import("../manager/user"), client: import("eris").Client, guild_id: string}} essential "PLATINUM"/"RANK" will need user manager, "ROLE" will need (discord) client and guild_id
      * @param {string|string[]} user_id 
      * @param {{t: 'RANK'|'ROLE'|'MESSAGE'|'PLATINUM', v: any}[]} restrictions 
      */
@@ -42,9 +47,16 @@ module.exports = {
             let result = {};
 
             for (let i = 0; i < restrictions.length; i++) {
-                result[restrictions[i]['t']] = user_id.map(() => 0);
-                switch (restrictions[i]['t']) {
+                const type = restrictions[i]['t'];
+
+                if (type !== 'UNKNOWN')
+                    result[type] = user_id.map(() => 0);
+                switch (type) {
                     case "PLATINUM": case "RANK":
+                        if (!essential && !essential.user) return Promise.reject(new Error("The user was not provided as an object for the first argument"));
+
+                        const { user } = essential;
+
                         /* 
                         
                         If the restriction involves platinum, it will check and return an array of 0 and 1, each index will be the same
@@ -53,6 +65,7 @@ module.exports = {
                         */
 
                         // Holy fudge, this is a big massive F for performance.
+                        // TODO: basically optimise this case code further by having everything in one for loop for faster performance compared to .map
                         let users = user_id.map(id => {
                             let loser = user.fetch({_id: id});
 
@@ -65,149 +78,53 @@ module.exports = {
                         //    "$or": user_id.map(a => { return {_id: a}; }) // lmao rip server.
                         //}).project({_id: 1, plat: 1}).toArray();
 
+                        let value = (type === 'RANK') ? platFromRank(restrictions[i]['v']) : restrictions[i]['v'];
                         if (users.length) {
                             for (let a = 0; a < users.length; a++) {
-                                if (users[a]['plat'] >= restrictions[i]['v']) // if their plat is greater than, or equal to the required plat.
-                                    result[restrictions[i]['t']][user_id.findIndex(user => user == users[a]['_id'])] = 1;
+                                if (users[a] !== null && users[a]['plat'] >= value) // if their plat is greater than, or equal to the required plat.
+                                    result[type][user_id.findIndex(user => user == users[a]['_id'])] = 1;
                             }
 
                         } else {
                             return user_id.map(() => 0); // If none of the document has showed up, nobody qualifies and so therefore nobody can win it.
                         }
                         break;
-                }
-            }
-
-        }
-
-    }
-}
-
-module.exports = {
-    verifyRestrictionByUser:
-    /**
-     * @param {import("../manager/user")} user 
-     * @param {string|string[]} user_id
-     * @param {{t: 'RANK'|'ROLE'|'MESSAGE'|'PLATINUM', v: any}[]} restrictions 
-     * @param {{client: import("eris").Client}} essentials
-     * @returns {Promise<number[]>} a list of 0 and 1, basically booleans but cheap.
-     */
-    async (user, user_id, restrictions, essentials) => {
-        if (Array.isArray(user_id)) {
-            if (restrictions && restrictions.length) {
-                let result = {}; //restrictions.length; //user_id.map(a => 0); // ik ik, idek why do i have this, most of the code on this function is easily optimised but... spaghetti.
-
-                for (let i = 0; i < restrictions.length; i++) {
-                    result[restrictions[i]['t']] = user_id.map(() => 0);
-                    switch (restrictions[i]['t']) {
-                        case "PLATINUM":
-                            /* 
-                            
-                            If the restriction involves platinum, it will check and return an array of 0 and 1, each index will be the same
-                            and 0 would obviously mean that the user does not qualify whereas 1 is.
-
-                            */
-
-                            // Holy fudge, this is a big massive F for performance.
-                            let users = user_id.map(id => {
-                                let loser = user.fetch({_id: id});
-
-                                return (loser && loser.length) ? loser[0] : null;
-                            });
-
-                            //let users = user.fetch().filter(loser => user_id.includes(loser._id) || user.listOfDisabled.includes(loser._id));
-
-                            //let users = await mongo.db().collection('User').find({
-                            //    "$or": user_id.map(a => { return {_id: a}; }) // lmao rip server.
-                            //}).project({_id: 1, plat: 1}).toArray();
-
-                            if (users.length) {
-                                for (let a = 0; a < users.length; a++) {
-                                    if (users[a]['plat'] >= restrictions[i]['v']) // if their plat is greater than, or equal to the required plat.
-                                        result[restrictions[i]['t']][user_id.findIndex(user => user == users[a]['_id'])] = 1;
-                                }
-
-                            } else {
-                                return user_id.map(() => 0); // If none of the document has showed up, nobody qualifies and so therefore nobody can win it.
-                            }
-
-                            //for (let i = 0; i < user_id.length; i++) {
-                            //    // I know this is also inefficient because the users array would have to loop every time just until it would find a hit lmao
-                            //    if (users.some(user => user.id == ))
-                            //}
-
-                            break;
-                        case "RANK":
-                            // ??? why am i using this instead of platinum?
-                            let users1 = await this.fetchPlatinum(user, user_id);
-
-                            if (users1.count) {
-                                for (let a = 0; a < users1.count; a++) { // Loops through an array of platinum counts
-                                    if (users1.users[a] >= platFromRank(restrictions[i]['v'])) { // Check if the user's plat is higher or same to the plat needed.
-                                        result[restrictions[i]['t']][a] = 1; // Declare it a pass if so...
-                                    }
-                                }
-
-                            } else {
-                                return user_id.map(a => 0); // If none of the document has showed up, nobody qualifies and so therefore nobody can win the prize.
-                            }
-                            break;
-                        case "ROLE":
-                            if (!essentials || !essentials.client) //{
-                                return Promise.reject(new Error("The essentials object was not passed in, with client object."));//Error("")
-                            //}
-
-                            let roles = (essentials.client.guilds)
-
-
-                        default:
-                            result[restrictions[i]['t']] = user_id.map(() => 1);
-                    }
-                }
-
-                /* 
-
-                TODO: Unify all of the restrictions pass stuff into one, so if a person has met 2 requirements then the end result is 1 for their index.
-                If a person however have met only one of two requirements then the outcome is 0 for their index. (done)
-
-                */
-
-                return arrayAnd(Object.values(result)); // i love binary, yum yum /s
-            } else return user_id.map(() => 1);
-        } else {
-            let result = [];
-
-            if (!restrictions || !restrictions.length) return [1];
-
-            for (let i = 0; i < restrictions.length; i++) {
-                result[i] = 0;
-
-                const type = restrictions[i]['t'];
-                let value = restrictions[i]['v'];
-                switch (restrictions[i]['t']) {
-                    case "PLATINUM": case "RANK":
-                        let users = user.fetch({_id: user_id});
-
-                        if (users && users.length && users.some(a => a._id === user_id)) {
-                            let plat = users.find(a => a._id === user_id).plat;
-
-                            //let { plat: plat } = await this.fetchPlatinum(mongo, user_id);
-
-                            if (type == 'RANK') value = platFromRank(value);
-
-                            if (plat >= value) result[i] = 1;
-                        }
-                        break;
                     case "ROLE":
-                        // TODO: ADD SUPPORT FOR ROLE.
-                    default:
-                        result[i] = 1;//result[restrictions[i]['t']] = user_id.map(() => 0);
+                        if (!essential && !(essential.client || essential.guild_id)) return Promise.reject(new Error("The client and or guild_id were not provided as an object for the first argument"));
+
+                        const { client } = essential;
+
+                        let guild = client.guilds.get(essential.guild_id);
+
+                        /**
+                         * This list will comprise of people that weren't cached for some reason.
+                         * Also a F because this is going to be problematic when there for eg there might 
+                         * be too many people that left before the giveaway could end.
+                         */
+                        let fail_list = [], oneGotcha = false;
+
+                        // I cba resolving cache and stuff in case the guild doesn't exist, which should be impossible.
+                        if (!guild) return user_id.map(() => 0);
+
+                        for (let j = 0; j < user_id.length; j++) {
+                            let member = guild.members.get(user_id[j]);
+
+                            if (!member) member = fail_list.push(user_id[j]);
+
+                            result[type][user_id[j]] = member.roles.some(role => role === restrictions[i]['v']);
+                            if (!oneGotcha && result[type][user_id[j]]) oneGotcha = true;
+                        }
+
+                        if (!oneGotcha) return user_id.map(() => 0);
+                        break;
+                    //default:
+                        //result[restrictions[i]['t']] = user_id.map(() => 1);
                 }
             }
 
-            return result;
-        }
-    }, fetchPlatinum:
+            return arrayAnd(Object.values(result)); // i love binary, yum yum /s
+        } else return user_id.map(() => 1);
+    }, /*fetchPlatinum:
     /**
      * @deprecated
      * @param {import("../manager/user")} user 
@@ -216,7 +133,7 @@ module.exports = {
      * IF a list is given, this will return an array of platinum, each index will be the same as the list.
      * Unless if not a single user has platinum in the list.
      * 
-     */
+     *
     async(user, user_id) => {
         if (Array.isArray(user_id)) {
             let result = user_id.map(() => 0);
@@ -248,5 +165,5 @@ module.exports = {
                 return {_id: user_id, plat: 0};
             }
         }
-    }
+    }*/
 }

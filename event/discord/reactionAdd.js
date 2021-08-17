@@ -15,6 +15,7 @@ module.exports = (stuff) => {
         if (!ga_manager.initialised) return;
         if (reactor.id === client.user.id) return;
         if (reactor.bot) return;
+        if (!msg.guildID) return;
 
         // NOTE: any reaction from here is not meant to be saved as this bot is only meant to remove the reactions that do not count.
 
@@ -36,14 +37,14 @@ module.exports = (stuff) => {
         
         //if (messages[msg.id] == {}) return;
 
-        verifyRestrictionByUser(user_manager, reactor.id, giveaway.restrictions).then((result) => {
+        verifyRestrictionByUser({user: user_manager, client, guild_id: msg.guildID}, reactor.id, giveaway.restrictions).then((result) => {
             if (result.every(a => a === 1)) return; // This will ignore since the user qualifies.
             else {
                 // TODO: increment counter. disqualify if repeated?
-                client.removeMessageReaction(msg.channel.id, msg.id, id.emoji.pop, reactor.id).catch(logger.error);
+                client.removeMessageReaction(msg.channel.id, msg.id, id.emoji.pop, reactor.id).catch((err) => logger.error(err));
                 client.getDMChannel(reactor.id).then((chnl) => {
                     chnl.createMessage({
-                        content: 'hALT!',
+                        content: 'Halt!',
                         embed: embed.dm.doesntCount(giveaway.restrictions, result)
                     }).catch(() => {});
                 }, () => {})// If it no worky, the user prob has disabled their DMs so this function will not be caught.

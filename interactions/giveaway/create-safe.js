@@ -119,6 +119,7 @@ module.exports = {
                 status: ((parsed_duration + msg.createdAt) - 20000 - Date.now() >= 0) ? Giveaway.status.ONGOING : Giveaway.status.ENDING, //(parsed_duration/1000 <= 100) ? Giveaway.status.ONGOING,
                 winners: winners || 1,
                 restrictions: parsed_restrictions,
+                guild_id: interaction.guild.id,
                 starter_id: interaction.member.user.id,
                 contact_id: contact || undefined,
                 message: {

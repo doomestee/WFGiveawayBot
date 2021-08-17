@@ -217,7 +217,7 @@ module.exports = {
                     }, {
                         name: "Extra info:",
                         value: `This giveaway can only accept ${giveaway.winners} winner/s.\nYour reaction will not count if you do not qualify.`
-                    }], color: 0x00dd00
+                    }], color: 0x00dd00, timestamp: new Date(giveaway.duration+giveaway.startDate)
                 //}
             }},
             error: {

@@ -27,13 +27,11 @@ Things it can do:
 
 Things to add (TODO):
 * Giveaways*
-  * - [ ] Support roles restriction
-  * - [ ] Change timer if already set, this might be controversial so this is the least priority.
+  * - [x] Support roles restriction
   * - [ ] Add a limit to how many giveaways a channel can have, and how many a guild can have (prob unlimited).
   * - [ ] Add a command that will let mods bind users.
     * If a person loses access to their main account, the platinum donated can be bound without affecting the spreadsheet
-* Disqualification*
-  * - [ ] Impose a limit for how long the duration can last for.
+  * - [ ] Change timer if already set, this might be controversial so this is the least priority.
 * Infraction*
   * - [ ] Allow a user to see THEIR OWN history of infractions, provided if the guild allows it.
   * - [ ] Allow a mod to see history of infractions concerning a user.

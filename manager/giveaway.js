@@ -132,6 +132,7 @@ module.exports = class GiveawayManager extends EventEmitter {
      * This will first check from the cache, otherwise it will check the collection via mongo connection. If neither returns then it will return null.
      * @param {Object} criteria
      * @param {string|ObjectID} criteria._id If given, this will be automatically parsed as ObjectID and yield one result in array. (HIGH priority)
+     * @param {string} criteria.guild_id If given, I have no idea what priority as this is fairly new.
      * @param {string} criteria.message_id If given (along with `criteria.message_channel_id`) this will yield one result in array. (MEDIUM priority)
      * @param {string} criteria.message_channel_id If given (along with `criteria.message_id`) this will yield one result in array. (MEDIUM PRIORITY)
      * @param {string} criteria.prize If given (along with `criteria.duration` and `criteria.startDate`) this will yield one result in array. (LOW PRIORITY)
@@ -201,6 +202,7 @@ module.exports = class GiveawayManager extends EventEmitter {
      * @param {number} [info.duration] How long will this giveaway last for (this will has to be added to `this.startDate`)
      * @param {number} [info.startDate] When the giveaway is set to start.
      * @param {number} [info.status] Status of the giveaway
+     * @param {string} [id.guild_id] Guild's ID for the giveaway
      * @param {Object} [info.message] The message for the giveaway if created, (if the message doesnt exist before it ended then it should be cancelled)
      * @param {string} [info.message.id] The ID of the message for the giveaway if created, (if the message doesnt exist before it ended then it should be cancelled)
      * @param {string} [info.message.channel_id] The channel for the message if created, (if the message doesnt exist before it ended then it should be cancelled)
@@ -254,6 +256,7 @@ module.exports = class GiveawayManager extends EventEmitter {
      * @param {number} [info.winners] The amount of people that can win the giveaways
      * @param {number} [info.duration] (E) In milliseconds, how long will the giveaway last for.
      * @param {number} [info.status] If left out, it will assume that the giveaway has not yet started, prohibiting the usage of `info.message`.
+     * @param {number} [info.guild_id] ID of the guild.
      * @param {Object} [info.message]
      * @param {string} [info.message.id]
      * @param {string} [info.message.channel_id]
@@ -285,6 +288,7 @@ module.exports = class GiveawayManager extends EventEmitter {
             contact: (info.contact_id != null) ? {
                 id: info.contact_id || null
             } : null,
+            guild_id: info.guild_id,
             restrictions: info.restrictions || [],
             startDate: info.startDate || Date.now(),
             participants: (info.status <= Giveaway.status.ENDING) ? info.participants : null

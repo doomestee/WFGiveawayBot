@@ -75,7 +75,7 @@ module.exports = (stuff) => {
                 }
                 
                 // When there is at least a single person (excluding the bot)
-                const indexes = await verifyRestrictionByUser(user, users.filter(a => a != client.user.id), ga.restrictions);
+                const indexes = await verifyRestrictionByUser({user, guild_id: ga.guild_id, client}, users.filter(a => a != client.user.id), ga.restrictions);
 
                 if (indexes.filter(a => a === 1).length) {
                     let ids = users.filter(a => a != client.user.id)
