@@ -28,9 +28,7 @@ module.exports = {
 
         if (userIfAlreadyExist) {
             return interaction.sendInitial(client.requestHandler, {
-                content: `The user you're trying to bind is already bound to someone else, the user is bound *by love* to <@${userIfAlreadyExist.bind_id}>.
-                ${(userIfAlreadyExist.reason) ? "Reason for their binding: " + userIfAlreadyExist.reason : 'The reason for their binding was not provided.'}
-                NOTE: you can bind the other way.`
+                content: `The user you're trying to bind is already bound to someone else, the user is bound *by love* to <@${userIfAlreadyExist.bind_id}>.\n${(userIfAlreadyExist.reason) ? "Reason for their binding: " + userIfAlreadyExist.reason : 'The reason for their binding was not provided.'}\nNOTE: you can bind the other way.`
             }, {ephemeral: true})
         }
 

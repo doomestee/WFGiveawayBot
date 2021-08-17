@@ -29,7 +29,9 @@ Things to add (TODO):
 * Giveaways*
   * - [x] Support roles restriction
   * - [ ] Add a limit to how many giveaways a channel can have, and how many a guild can have (prob unlimited).
-  * - [ ] Add a command that will let mods bind users.
+  * - [x] Add a command that will let mods bind users.
+    * - [x] 
+    * - [x] 
     * If a person loses access to their main account, the platinum donated can be bound without affecting the spreadsheet
   * - [ ] Change timer if already set, this might be controversial so this is the least priority.
 * Infraction*
