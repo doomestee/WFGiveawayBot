@@ -6,7 +6,7 @@ const { id, yieldPropertiesOfObjects, compareObjects } = require("../utilities")
 /**
  * The point of this manager is to causally restart the users fetched from the google sheet api stuff idk
  */
-module.exports = class InfractionManager {
+module.exports = class GuildManager {
     /**
      * @param {MongoClient|null} mongo If null, this will assume that the manager is not ready yet and thus most of the methods will be paused.
      * @param {import("./logger")} logger A logger manager to bind any error into it
@@ -22,7 +22,7 @@ module.exports = class InfractionManager {
         this.timers = {1: 0};
         this.logger = logger;
         /**
-         * @type {Infraction[]}
+         * @type {Guild[]}
          */
         this.list = [];
 

@@ -54,7 +54,7 @@ module.exports = (stuff) => {
 
         giveaway.updateGiveaway(ga._id, {$set: {participants: ga.participants}}).then(() => {
             client.createMessage(ga.message.channel_id, {
-                content: `(REROLLED - ${remaining.length-winners.length} people left)\nCongratulations ${winners.map(user => `<@${user.id}>`).join(', ')} for winning:\n**${ga.prize}**\n${msg.jumpLink}`, messageReference: {messageID: msg.id}
+                content: `(REROLLED - ${remaining.length-winners.length} people left)\nCongratulations ${winners.map(user => `<@${user.id}>`).join(', ')} for winning:\n**${ga.prize}**\nhttps://discord.com/channels${ga.guild_id}/${ga.message.channel_id}/${ga.message.id}`, messageReference: {messageID: msg.id}
             })
 
             //client.editMessage(ga.message.channel_id, ga.message.id, {

@@ -315,7 +315,7 @@ function formatRestrictions(restrictions, tick=false, ignoreStart=false) {
         else if (restriction['t'] == 'RANK')     result += `\n${(tick !== false) ? ((tick[i]) ? ' ✅' : ' ❌') : ''} - ${restriction['v']} rank.`;//${(tick != false) ? ((tick[i]) ? ' ✅' : ' ❌') : ''}.`;
         else if (restriction['t'] == 'ROLE')     result += `\n${(tick !== false) ? ((tick[i]) ? ' ✅' : ' ❌') : ''} - owns <@&${restriction['v']}>.`;// ${(tick != false) ? ((tick[i]) ? ' ✅' : ' ❌') : ''}.`;
         else if (restriction['t'] == 'MESSAGE')  result += `\n${(tick !== false) ? ((tick[i]) ? ' ✅' : ' ❌') : ''} - ${restriction['v']} messages in this server.`;//${(tick != false) ? ((tick[i]) ? ' ✅' : ' ❌') : ''}.`;
-        else if (restriction['t'] == 'UNOWNED')  result += `\n${(tick !== false) ? '❔' : ''} - must not own the listed item/s!`;//${(tick != false) ? ' ❔' : ''}`;//? ((tick[i]) ? ' ✅' : ' ❌') : ''}`;
+        else if (restriction['t'] == 'UNOWNED')  result += `\n${(tick !== false) ? '❔' : ''} - must not own the listed item(s)!`;//${(tick != false) ? ' ❔' : ''}`;//? ((tick[i]) ? ' ✅' : ' ❌') : ''}`;
         else if (restriction['t'] == 'UNKNOWN')  result += `\n- unknown restriction: ${restriction['v']}`;
         else                                     result += `\n- unknown restriction: ${restriction['t']} ${restriction['v']}`;
         //else                                     result += `\n- ${restriction['t']}`
