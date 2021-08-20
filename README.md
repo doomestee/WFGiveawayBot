@@ -39,7 +39,7 @@ Things to add (TODO):
   * - [ ] Allow a mod to see history of infractions concerning a user.
     * - [ ] Send a file with the entire history if used in ![the right channel](https://i.imgur.com/wBjmBZd.png)
 * Add a collection for servers
-  * - [ ] Command Prefix.
+  * - [ ] (NOT ADDING) ~~Command Prefix.~~
   * - [ ] Allow server admins adding roles to whitelist, granting them access to use the main features of the bot for the guild.
     * Note this is currently hardcoded.
   * - [ ] Allow which commands can be used in specific channels.
