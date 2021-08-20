@@ -53,7 +53,7 @@ module.exports = {
                         footer: {
                             text: `This took ${Date.now() - interaction.createdAt}ms from the time the interaction is received to sending this response.`
                         }, author: {
-                            name: (interaction.member.nick) ? interaction.member.nick : interaction.member.user,
+                            name: (interaction.member.nick) ? interaction.member.nick : interaction.member.user.username,
                             icon_url: getAvatarURL([interaction.member.avatar, interaction.member.user.avatar], interaction.member.user.discriminator, interaction.member.user.id)
                         }
                     }],
